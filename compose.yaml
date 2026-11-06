@@ -1,0 +1,20 @@
+# Local development database.
+# Start:  docker compose up -d
+# Stop:   docker compose down        (add -v to also delete the data)
+#
+# Uses port 5434 so it does not clash with a PostgreSQL already installed on 5432.
+services:
+  postgres:
+    image: postgres:18
+    container_name: ecommerce-postgres
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: ecommerce   # local dev only, never use in production
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+volumes:
+  postgres-data:
