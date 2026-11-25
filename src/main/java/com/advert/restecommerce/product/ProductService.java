@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -24,6 +27,14 @@ public class ProductService {
     public ProductResponse create(ProductRequest productRequest){
         Product product = productMapper.toProductEntity(productRequest);
         return productMapper.toProductResponse(productRepository.save(product));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllProducts(){
+        return productRepository.findByActiveTrue()
+                .stream()
+                .map(product -> productMapper.toProductResponse(product))
+                .toList();
     }
 }
 

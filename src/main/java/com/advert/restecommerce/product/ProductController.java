@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -22,5 +24,10 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponse create(@Valid @RequestBody ProductRequest productRequest) {
         return productService.create(productRequest);
+    }
+
+    @GetMapping
+    public List<ProductResponse> getProducts() {
+        return productService.getAllProducts();
     }
 }
