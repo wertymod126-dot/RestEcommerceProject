@@ -43,10 +43,26 @@ public class ProductService {
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
+    @Transactional
+    public ProductResponse publish(Long id){
+        Product product = findProductOrThrow(id);
+        product.publish();
+        return productMapper.toProductResponse(productRepository.save(product));
+    }
+
+    @Transactional
+    public ProductResponse unpublish(Long id){
+        Product product = findProductOrThrow(id);
+        product.unpublish();
+        return productMapper.toProductResponse(productRepository.save(product));
+    }
+
     // helper methods
     private Product findProductOrThrow(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id + " id Product not found"));
     }
+
+
 }
 

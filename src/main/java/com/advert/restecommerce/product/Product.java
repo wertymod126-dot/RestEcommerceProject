@@ -41,6 +41,7 @@ public class Product {
     private Integer stockQuantity = 0;
 
     @Column(nullable = false)
+    @Setter(AccessLevel.NONE)
     private boolean active = false;
 
     @CreationTimestamp
@@ -53,4 +54,7 @@ public class Product {
 
     @Version
     private Long version;
+
+    public void publish()   { this.active = true; }
+    public void unpublish()  { this.active = false; }
 }

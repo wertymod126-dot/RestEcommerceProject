@@ -35,4 +35,14 @@ public class ProductController {
         return productService.update(id, productRequest);
     }
 
+    @PatchMapping("/{id}/publish")
+    public ProductResponse publish(@PathVariable Long id) {
+        return productService.publish(id);
+    }
+
+    @PatchMapping("/{id}/unpublish")
+    public ProductResponse unpublish(@PathVariable Long id) {
+        return productService.unpublish(id);
+    }
+
 }
