@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,24 +16,24 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     @Transactional(readOnly = true)
-    public ProductResponse getById(Long id){
-        Product product = findProductOrThrow(id);
+    public ProductResponse getActiveById(Long id) {
+        Product product = productRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
         return productMapper.toProductResponse(product);
     }
 
     @Transactional
-    public ProductResponse create(ProductRequest productRequest){
+    public ProductResponse create(ProductRequest productRequest) {
         Product product = productMapper.toProductEntity(productRequest);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getActiveProducts(String search){
+    public List<ProductResponse> getActiveProducts(String search) {
         List<Product> products;
-        if (search == null || search.isBlank()){
+        if (search == null || search.isBlank()) {
             products = productRepository.findByActiveTrue();
-        }
-        else {
+        } else {
             products = productRepository.findByActiveTrueAndNameContainingIgnoreCase(search);
         }
         return products.stream()
@@ -43,30 +42,30 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse update(Long id, ProductRequest productRequest){
+    public ProductResponse update(Long id, ProductRequest productRequest) {
         Product product = findProductOrThrow(id);
-        productMapper.updateEntity(productRequest,product);
+        productMapper.updateEntity(productRequest, product);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
     @Transactional
-    public ProductResponse publish(Long id){
+    public ProductResponse publish(Long id) {
         Product product = findProductOrThrow(id);
         product.publish();
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
     @Transactional
-    public ProductResponse unpublish(Long id){
+    public ProductResponse unpublish(Long id) {
         Product product = findProductOrThrow(id);
         product.unpublish();
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
     // helper methods
-    private Product findProductOrThrow(Long id){
+    private Product findProductOrThrow(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id + " id Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
     }
 
 
