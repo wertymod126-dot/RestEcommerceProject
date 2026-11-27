@@ -29,9 +29,15 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts(){
-        return productRepository.findByActiveTrue()
-                .stream()
+    public List<ProductResponse> getActiveProducts(String search){
+        List<Product> products;
+        if (search == null || search.isBlank()){
+            products = productRepository.findByActiveTrue();
+        }
+        else {
+            products = productRepository.findByActiveTrueAndNameContainingIgnoreCase(search);
+        }
+        return products.stream()
                 .map(productMapper::toProductResponse)
                 .toList();
     }

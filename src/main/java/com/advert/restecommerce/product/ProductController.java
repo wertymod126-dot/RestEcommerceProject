@@ -26,10 +26,17 @@ public class ProductController {
         return productService.create(productRequest);
     }
 
+//    @GetMapping
+//    public List<ProductResponse> getProducts() {
+//        return productService.getActiveProducts();
+//    }
+
     @GetMapping
-    public List<ProductResponse> getProducts() {
-        return productService.getAllProducts();
+    public List<ProductResponse> getProducts(@RequestParam(required = false) String search) {
+        return productService.getActiveProducts(search);
     }
+
+    @GetMapping("/")
     @PutMapping("/{id}")
     public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         return productService.update(id, productRequest);
