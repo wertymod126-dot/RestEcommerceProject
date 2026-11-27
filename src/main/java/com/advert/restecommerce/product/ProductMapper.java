@@ -28,4 +28,12 @@ public class ProductMapper {
         product.setStockQuantity(request.stockQuantity());
         return product;
     }
+
+    public void updateEntity(ProductRequest productRequest, Product product){
+        product.setName(productRequest.name());
+        product.setDescription(productRequest.description());
+        product.setPrice(productRequest.price());
+        product.setImageUrl(productRequest.imageUrl());
+        product.setStockQuantity(productRequest.stockQuantity());
+    }
 }

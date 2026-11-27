@@ -18,8 +18,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse getById(Long id){
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id + " id Product not found"));
+        Product product = findProductOrThrow(id);
         return productMapper.toProductResponse(product);
     }
 
@@ -33,8 +32,21 @@ public class ProductService {
     public List<ProductResponse> getAllProducts(){
         return productRepository.findByActiveTrue()
                 .stream()
-                .map(product -> productMapper.toProductResponse(product))
+                .map(productMapper::toProductResponse)
                 .toList();
+    }
+
+    @Transactional
+    public ProductResponse update(Long id, ProductRequest productRequest){
+        Product product = findProductOrThrow(id);
+        productMapper.updateEntity(productRequest,product);
+        return productMapper.toProductResponse(productRepository.save(product));
+    }
+
+    // helper methods
+    private Product findProductOrThrow(Long id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id + " id Product not found"));
     }
 }
 

@@ -30,4 +30,9 @@ public class ProductController {
     public List<ProductResponse> getProducts() {
         return productService.getAllProducts();
     }
+    @PutMapping("/{id}")
+    public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+        return productService.update(id, productRequest);
+    }
+
 }
